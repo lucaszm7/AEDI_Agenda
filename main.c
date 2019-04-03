@@ -7,58 +7,54 @@ typedef struct contato {
 
 int *ntotal,*escolha;
 int *acontador,*bcontador;
+contato *pessoa;
+
+void menu(void);
+void *addContato (void *buffer);
+void mostraContatos(void *buffer);
+
 
 int main(int argc, char **argv) {
 	void *buffer = malloc(4*sizeof(int));
 	ntotal = buffer;
-	*total = 0;
+	*ntotal = 0;
 	escolha = ntotal + 1;
 	*escolha = 0;
 	acontador = escolha + 1;
 	*acontador = 0;
 	bcontador = acontador + 1;
 	*bcontador = 0;
-	while (*escolha == 4) {
+	pessoa = bcontador + 1;
+	while (*escolha != 4) {
     	menu();
 	    scanf("%d",escolha);
 	    getchar();
 	    if (*escolha == 1) buffer = addContato (buffer);
 	    else if (*escolha == 2) ;
-	    else if (*escolha == 3) mostraContatos(buffer,ntotal);
+	    else if (*escolha == 3) mostraContatos(buffer);
 	}
 	return 0;
 }
 
 
 
-void menu () {
-    printf("----- MENU ----\n1 - Adicionar Contato\n2 - Remover Contato\n")
+void menu (void) {
+    printf("----- MENU ----\n1 - Adicionar Contato\n2 - Remover Contato\n");
 }
 
 void *addContato (void *buffer) {
-	void *aux;
-	aux = bcontador + 1;
-	if((*ntotal == 0) {
-		
+	    *ntotal = *ntotal + 1;
+		buffer = realloc (buffer,4*sizeof(int) + (*ntotal)*sizeof(contato));
+		printf("Nome: ");
+        scanf("%[^\n]",pessoa->nome);
+        printf("Telefone: ");
+        scanf("%d",&pessoa->numero);
+        return buffer;
 	}
-	else {
-		printf("ENTRO AQUI K7\n");
-		buffer = realloc(buffer,(*ntotal)*(sizeof(int)+sizeof(char)));
-		for(aux = buffer;count < *ntotal;count++) {
-			(int*)aux++;
-			printf("\n%d\n",count);
-			(char*)aux++;
-		}
-		*(int*)aux = 10;
-		(int*)aux++;
-		*(char*)aux = 'b';
-		return buffer;
-	}
-}
 
 //void rmContato (void *buffer)
 
-void mostraContatos(void *buffer,int ntotal) {
+void mostraContatos(void *buffer) {
 	if (ntotal == 0) return;
 	int i=1;
 	for (;i <= ntotal;i++) {
