@@ -5,17 +5,19 @@ typedef struct contato {
     char nome[20];
 }contato;
 
+
+void *buffer;
 int *ntotal,*escolha;
 int *acontador,*bcontador;
 contato *pessoa;
 
 void menu(void);
-void *addContato (void *buffer);
-void mostraContatos(void *buffer);
+void addContato (void);
+void mostraContatos(void);
 
 
 int main(int argc, char **argv) {
-	void *buffer = malloc(4*sizeof(int));
+	buffer = malloc(4*sizeof(int));
 	ntotal = buffer;
 	*ntotal = 0;
 	escolha = ntotal + 1;
@@ -29,9 +31,9 @@ int main(int argc, char **argv) {
     	menu();
 	    scanf("%d",escolha);
 	    getchar();
-	    if (*escolha == 1) buffer = addContato (buffer);
+	    if (*escolha == 1) addContato ();
 	    else if (*escolha == 2) ;
-	    else if (*escolha == 3) mostraContatos(buffer);
+	    else if (*escolha == 3) mostraContatos();
 	}
 	return 0;
 }
@@ -39,28 +41,31 @@ int main(int argc, char **argv) {
 
 
 void menu (void) {
-    printf("----- MENU ----\n1 - Adicionar Contato\n2 - Remover Contato\n");
+    printf("\n\n----- MENU ----\n1 - Adicionar Contato\n//2 - Remover Contato\n3 - Listar Contatos");
 }
 
-void *addContato (void *buffer) {
-	    *ntotal = *ntotal + 1;
+void addContato (void) {
+	    (*ntotal)++;
+	    printf("ntotal - %d\n", *ntotal);
 		buffer = realloc (buffer,4*sizeof(int) + (*ntotal)*sizeof(contato));
 		printf("Nome: ");
         scanf("%[^\n]",pessoa->nome);
         printf("Telefone: ");
         scanf("%d",&pessoa->numero);
-        return buffer;
-	}
+        pessoa++;
+}
 
 //void rmContato (void *buffer)
 
-void mostraContatos(void *buffer) {
-	if (ntotal == 0) return;
-	int i=1;
-	for (;i <= ntotal;i++) {
-		printf("Numero - %d\n",*(int*)buffer);
-		*(int*)buffer++;
-		printf("Nome   - %c\n\n",*(char*)buffer);
-		*(char*)buffer++;
+void mostraContatos(void) {
+	if ((*ntotal) == 0) printf("\nNão há nenhum contato ainda\n");
+	else {
+		pessoa = bcontador + 1;
+	    for ((*acontador) = 0;(*acontador) < (*ntotal); (*acontador)++) {
+		    printf("\nacontador - %d\n", *acontador);
+	    	printf("Nome - %s\n",pessoa->nome);
+	    	printf("Numero - %d\n\n",pessoa->numero);
+	    	pessoa++;
+	    }
 	}
 }
