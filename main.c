@@ -11,24 +11,28 @@ void menu(void);
 void addContato (void);
 void listaContato(void);
 void rmContato(void);
+void achaContato(void);
+
 void ordena(void);
 
 void *pBuffer;
 int *ntotal, *escolha, *cont, *cont2;
 contato *pessoa,*aux;
+char *achaNome;
 
 int main () {
-    pBuffer = malloc(4*sizeof(int));
+    pBuffer = malloc(4*sizeof(int)+(10*sizeof(char)));
     ntotal = pBuffer;
     escolha = ntotal+1;
     cont = escolha+1;
     cont2 = cont + 1;
-    pessoa = cont2+1;
+    achaNome = cont2;
+    pessoa = (achaNome + 10);
     *ntotal = 0;
     do {
         menu ();
         scanf("%d",escolha);
-        getchar;
+        getchar();
         switch (*escolha) {
         case 1:
             (*ntotal)++;
@@ -40,12 +44,15 @@ int main () {
         case 3:
             listaContato ();
             break;
-        default:
+        case 5:
             printf("\n----- Saindo do programa! -----\n\n");
             free (pBuffer);
-	    return 0;
+            return 0;
+        case 4:
+            achaContato();
+        
         }
-    } while (*escolha != 666);
+    } while (1);
 }
 
 void ordena () {
@@ -53,14 +60,15 @@ void ordena () {
     escolha = (int*)ntotal+ 1;
     cont = (int*)escolha+ 1;
     cont2 = (int*)cont + 1;
-    pessoa = (contato*) (cont2 + 1);
+    achaNome = (char*)cont2;
+    pessoa = (contato*) (achaNome + 10);
     for (*cont = 1; *cont < *ntotal; (*cont) = (*cont) + 1){
             pessoa++;
     }
 }
 
 void addContato () {
-    pBuffer = realloc(pBuffer,(4*sizeof(int)) + ((*ntotal)*sizeof(contato)));
+    pBuffer = realloc(pBuffer,(4*sizeof(int)) + (10*sizeof(char))+((*ntotal)*sizeof(contato)));
     ordena ();
     printf("\nNome: ");
     scanf("%s",pessoa->nome);
@@ -73,7 +81,7 @@ void listaContato () {
         printf("\nAinda nao ha contatos adicionados\n");
     }
     else {
-        pessoa = (int*) cont2 + 1;
+        pessoa = (char*) achaNome + 10;
         for(*cont = 0; *cont < *ntotal; (*cont) = (*cont)+1){
             printf("\nNome: %s",pessoa->nome);
             printf("\nTelefone: %d\n",pessoa->numero);
@@ -109,11 +117,11 @@ void rmContato () {
         printf("\nAinda nao ha contatos adicionados\n");
     }
     else { 
-        printf("\nDigite o numero do contato que desejas remover: ");
-        scanf("%d",escolha);
-        pessoa = cont2 + 1;
+        printf("\nDigite o nome do contato que desejas remover: ");
+        scanf("%s",achaNome);
+        pessoa = (char*)achaNome + 10;
         for (*cont = 0; *cont < *ntotal; (*cont) = (*cont)+1){
-            if ((pessoa->numero) == (*escolha)) {
+            if (strcmp(pessoa->nome,achaNome) == 0) {
                 for (*cont2 = *cont; *cont2 < *ntotal; (*cont2) = (*cont2) + 1) {
                     aux = pessoa + 1;
                     pessoa->numero = aux->numero;
@@ -121,13 +129,33 @@ void rmContato () {
                     pessoa = (contato*)pessoa + 1;
                 }
                 (*ntotal)--;
-                pBuffer  = (void*) realloc (pBuffer,4*sizeof(int)+(*ntotal)*sizeof(contato));
+                pBuffer  = (void*) realloc (pBuffer,4*sizeof(int)+(10*sizeof(char))+(*ntotal)*sizeof(contato));
                 ordena();
             }
             pessoa++;
         }
     }
 }
+
+void achaContato () {
+    if (*ntotal == 0) {
+        printf("\nAinda nao ha contatos adicionados\n");
+    }
+    else {
+        printf("Qual o nome do contato que desejas achar? ");
+        scanf("%s",achaNome);
+        pessoa = (char*) achaNome + 10;
+        for (*cont = 0; *cont < *ntotal; (*cont) = (*cont)+1){
+            if (strcmp(pessoa->nome,achaNome) == 0) {
+                printf("\nNome     - %s\n",pessoa->nome);
+                printf("Telefone - %d\n",pessoa->numero);
+            }
+            pessoa = (contato*)pessoa + 1;
+        }
+    }
+}
+
+
 void menu (void) {
-    printf("\n\n----- MENU ----\n1 - Adicionar Contato\n2 - Remover Contato\n3 - Listar Contatos\n4 - Sair do Programa\n");
+    printf("\n\n------- MENU ------\n1 - Adicionar Contato\n2 - Remover Contato\n3 - Listar Contatos\n4 - Achar Contato\n5 - Sair do Programa\n");
 }
