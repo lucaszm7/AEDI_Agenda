@@ -42,7 +42,8 @@ int main () {
             break;
         default:
             printf("\n----- Saindo do programa! -----\n\n");
-            return 0;
+            free (pBuffer);
+	    return 0;
         }
     } while (*escolha != 666);
 }
