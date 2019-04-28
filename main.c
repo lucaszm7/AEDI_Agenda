@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Comentário
+
 typedef struct contato {
     char nome[20];
     int numero;
