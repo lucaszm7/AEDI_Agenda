@@ -32,7 +32,6 @@ int main () {
     do {
         menu ();
         scanf("%d",escolha);
-        getchar();
         switch (*escolha) {
         case 1:
             (*ntotal)++;
@@ -89,28 +88,6 @@ void listaContato () {
         }
     }
 }
-
-/*void rmContato () {
-    if (*ntotal == 0) {
-        printf("\nAinda nao ha contatos adicionados\n");
-    }
-    else {
-    printf("\nDigite o numero do contato que desejas remover: ");
-    scanf("%d",escolha);
-    aux = pessoa - 1;
-    pessoa = (contato*) (cont + 1);
-    for ((*cont)=0;(*cont)<=(*ntotal);(*cont)++) {
-        if ((*escolha) == pessoa->numero) {
-            (*ntotal)--;
-            strcpy(pessoa->nome,aux->nome);
-            pessoa->numero = aux->numero;
-            pBuffer  = (void*) realloc (pBuffer,3*sizeof(int)+(*ntotal)*sizeof(contato));
-            ordena();
-        }
-        pessoa++;
-    }
-    }
-}*/
 
 void rmContato () {
     if (*ntotal == 0) {
