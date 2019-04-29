@@ -17,6 +17,10 @@ void achaContato(void);
 void insertSort(void);
 void ordena(void);
 
+void insertSort () {
+    printf("testando neh");
+}
+
 void *pBuffer;
 int *ntotal, *escolha, *cont, *cont2;
 contato *pessoa,*aux;
