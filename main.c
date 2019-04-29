@@ -19,6 +19,7 @@ void ordena(void);
 
 void insertSort () {
     printf("testando neh");
+    printf("JOSÉ É VOCÊ???");
 }
 
 void *pBuffer;
