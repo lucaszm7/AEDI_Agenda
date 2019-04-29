@@ -14,7 +14,7 @@ void addContato (void);
 void listaContato(void);
 void rmContato(void);
 void achaContato(void);
-
+void insertSort(void);
 void ordena(void);
 
 void *pBuffer;
