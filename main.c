@@ -17,10 +17,6 @@ void achaContato(void);
 void insertSort(void);
 void ordena(void);
 
-void insertSort () {
-    printf("testando neh");
-    printf("JOSÉ É VOCÊ???");
-}
 
 void *pBuffer;
 int *ntotal, *escolha, *cont, *cont2;
@@ -48,6 +44,7 @@ int main () {
             rmContato ();
             break;
         case 3:
+			insertSort();
             listaContato ();
             break;
         case 5:
@@ -59,6 +56,23 @@ int main () {
         
         }
     } while (1);
+}
+
+void insertSort() {
+	if ((*ntotal) > 2 ) {
+		contato *temp = malloc(sizeof(contato));
+	    aux = (achaNome + 10);
+	    for ((*cont2) = 1; (*cont2) < (*ntotal); (*cont2)++) {
+			strcpy(temp->nome,aux[(*cont2)].nome);
+			temp->numero = aux[(*cont2)].numero;
+			for ((*cont) = (*cont2) - 1; (*cont) >= 0 && strcmp(temp->nome,aux[(*cont)].nome) < 0; (*cont)--) {
+				 strcpy(aux[(*cont) + 1].nome,aux[(*cont)].nome);
+				 aux[(*cont) + 1].numero = aux[(*cont)].numero;
+			}
+			strcpy(aux[(*cont) + 1].nome,temp->nome);
+			aux[(*cont) + 1].numero = temp->numero;
+		}
+	}
 }
 
 void ordena () {
