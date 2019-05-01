@@ -15,13 +15,16 @@ void listaContato(void);
 void rmContato(void);
 void achaContato(void);
 void insertSort(void);
-void ordena(void);
+void ordena(void); //Ordena os ponteiros depois das funções de add e rm
 
 
+//Primeiro é o 'ntotal' e por ultimo '(acharNome + 10)', ponteiro 'pessoa' sempre aponta para o final do pBuffer
 void *pBuffer;
 int *ntotal, *escolha, *cont, *cont2;
 contato *pessoa,*aux;
 char *achaNome;
+
+
 
 int main () {
     pBuffer = malloc(4*sizeof(int)+(10*sizeof(char)));
