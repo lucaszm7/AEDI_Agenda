@@ -76,6 +76,7 @@ void insertSort() {
 			strcpy(aux[(*cont) + 1].nome,temp->nome);
 			aux[(*cont) + 1].numero = temp->numero;
 		}
+        free(temp);
 	}
 }
 
