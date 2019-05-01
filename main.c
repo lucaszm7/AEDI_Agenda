@@ -35,6 +35,7 @@ int main () {
     do {
         menu ();
         scanf("%d",escolha);
+        system("cls");
         switch (*escolha) {
         case 1:
             (*ntotal)++;
