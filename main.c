@@ -14,10 +14,7 @@ void addContato (void);
 void listaContato(void);
 void rmContato(void);
 void achaContato(void);
-void ordena(void); //Ordena os ponteiros depois das funções de add e rm
-
-//void swapContatos(void);
-//void igualaContatos(void);
+void ordenaPonteiros(void); //Ordena os ponteiros depois das funções de add e rm
 
 void insertSort(void);
 void selectionSort(void);
@@ -26,109 +23,115 @@ void quickSort(void);
 
 
 //Primeiro é o 'ntotal' e por ultimo '(acharNome + 10)', ponteiro 'pessoa' sempre aponta para o final do pBuffer
-void *pBuffer;
-int *ntotal, *escolha, *cont, *cont2;
-contato *pessoa,*aux;
-char *achaNome;
+void *startBuffer;
+int *pessoasSizeBuffer; 
+int *menuBuffer; 
+int *iBuffer;
+int *jBuffer;
+contato *endBuffer, *aux;
+char *startStringBuffer;
 
-
-
+//pBuf
+//ntotal
+//   escolha
+//        cont
+//            cont2
+//           achaNome
+//                                 pessoa
+//[int|int|int|int|c|c|c|c|c|c|c|c|c|c]
 int main () {
-    pBuffer = malloc(4*sizeof(int)+(10*sizeof(char)));
-    ntotal = pBuffer;
-    escolha = ntotal+1;
-    cont = escolha+1;
-    cont2 = cont + 1;
-    achaNome = cont2;
-    pessoa = (achaNome + 10);
-    *ntotal = 0;
+    // int buffer - string buffer - pessoas buffer
+    startBuffer = malloc(4*sizeof(int)+(10*sizeof(char)));
+    pessoasSizeBuffer = startBuffer;
+    *pessoasSizeBuffer = 0;
+    ordenaPonteiros();
     do {
         menu ();
-        scanf("%d",escolha);
-        ordena();
+        scanf("%d",menuBuffer);
+        ordenaPonteiros();
         system("cls");
-        switch (*escolha) {
-        case 1:
-            (*ntotal)++;
-            addContato ();
-            break;
-        case 2:
-            rmContato ();
-            break;
-        case 3:
-            listaContato ();
-            break;
-        case 6:
-            printf("\n----- Saindo do programa! -----\n\n");
-            free (pBuffer);
-            return 0;
-        case 4:
-            achaContato();
-            break;
-        case 5:
-            insertSort();
-            break;
+        switch (*menuBuffer) 
+        {
+            case 1:
+                addContato ();
+                break;
+            case 2:
+                rmContato ();
+                break;
+            case 3:
+                listaContato ();
+                break;
+            case 4:
+                achaContato();
+                break;
+            case 5:
+                insertSort();
+                break;
+            case 6:
+                printf("\n----- Saindo do programa! -----\n\n");
+                free (startBuffer);
+                return 0;
         }
-        ordena();
+        ordenaPonteiros();
     } while (1);
 }
 
 void insertSort() {
-	if ((*ntotal) > 2 ) {
+	if ((*pessoasSizeBuffer) > 2 ) {
 		contato *temp = malloc(sizeof(contato));
-	    aux = (achaNome + 10);
+	    aux = (contato*)(startStringBuffer + 10);
 
-	    for ((*cont2) = 1; (*cont2) < (*ntotal); (*cont2)++) {
-			strcpy(temp->nome,aux[(*cont2)].nome);
-			temp->numero = aux[(*cont2)].numero;
+	    for ((*jBuffer) = 1; (*jBuffer) < (*pessoasSizeBuffer); (*jBuffer)++) {
+			strcpy(temp->nome,aux[(*jBuffer)].nome);
+			temp->numero = aux[(*jBuffer)].numero;
 
-			for ((*cont) = (*cont2) - 1; (*cont) >= 0 && strcmp(temp->nome,aux[(*cont)].nome) < 0; (*cont)--) {
-				 strcpy(aux[(*cont) + 1].nome,aux[(*cont)].nome);
-				 aux[(*cont) + 1].numero = aux[(*cont)].numero;
+			for ((*iBuffer) = (*jBuffer) - 1; (*iBuffer) >= 0 && strcmp(temp->nome,aux[(*iBuffer)].nome) < 0; (*iBuffer)--) {
+				 strcpy(aux[(*iBuffer) + 1].nome,aux[(*iBuffer)].nome);
+				 aux[(*iBuffer) + 1].numero = aux[(*iBuffer)].numero;
 			}
 
-			strcpy(aux[(*cont) + 1].nome,temp->nome);
-			aux[(*cont) + 1].numero = temp->numero;
+			strcpy(aux[(*iBuffer) + 1].nome,temp->nome);
+			aux[(*iBuffer) + 1].numero = temp->numero;
 		}
         free(temp);
-        ordena();
+        ordenaPonteiros();
 	}
 }
 
 void selectionSort () {
-    if ((*ntotal) > 2) {
+    if ((*pessoasSizeBuffer) > 2) {
         contato *temp = malloc(sizeof(contato));
-        aux = (achaNome + 10);
-        for ((*cont) = 0; (*cont) < (*ntotal) - 1; (*cont)++) {
-            for ((*cont2) = (*ntotal) - 1; (*cont2) > (*cont); (*cont2)--) {
-                if (strcmp(aux[(*cont2)].nome,aux[(*cont)].nome) < 0) {
+        aux = (contato*)(startStringBuffer + 10);
+        for ((*iBuffer) = 0; (*iBuffer) < (*pessoasSizeBuffer) - 1; (*iBuffer)++) {
+            for ((*jBuffer) = (*pessoasSizeBuffer) - 1; (*jBuffer) > (*iBuffer); (*jBuffer)--) {
+                if (strcmp(aux[(*jBuffer)].nome,aux[(*iBuffer)].nome) < 0) {
 
-                    temp->numero = aux[(*cont)].numero;
-                    strcpy(temp->nome,aux[(*cont)].nome);
+                    temp->numero = aux[(*iBuffer)].numero;
+                    strcpy(temp->nome,aux[(*iBuffer)].nome);
 
-                    aux[(*cont)].numero = aux[(*cont2)].numero;
-                    strcpy(aux[(*cont)].nome,aux[(*cont2)].nome);
+                    aux[(*iBuffer)].numero = aux[(*jBuffer)].numero;
+                    strcpy(aux[(*iBuffer)].nome,aux[(*jBuffer)].nome);
 
-                    strcpy(aux[(*cont2)].nome,temp->nome);
-                    aux[(*cont2)].numero = temp->numero;
+                    strcpy(aux[(*jBuffer)].nome,temp->nome);
+                    aux[(*jBuffer)].numero = temp->numero;
                 }
             }
         }
         free(temp);
-        ordena();
+        ordenaPonteiros();
     }
 }
 
 void swap(contato **a1,contato **a2, int local) {
     contato *temp = malloc(sizeof(contato));
-    temp->numero = aux[(*cont)].numero;
-                    strcpy(temp->nome,aux[(*cont)].nome);
+    temp->numero = aux[(*iBuffer)].numero;
+    strcpy(temp->nome,aux[(*iBuffer)].nome);
 
-                    aux[(*cont)].numero = aux[(*cont2)].numero;
-                    strcpy(aux[(*cont)].nome,aux[(*cont2)].nome);
+    aux[(*iBuffer)].numero = aux[(*jBuffer)].numero;
+    strcpy(aux[(*iBuffer)].nome,aux[(*jBuffer)].nome);
 
-                    strcpy(aux[(*cont2)].nome,temp->nome);
-                    aux[(*cont2)].numero = temp->numero;
+    strcpy(aux[(*jBuffer)].nome,temp->nome);
+    aux[(*jBuffer)].numero = temp->numero;
 
 }
 
@@ -136,81 +139,82 @@ void quickSort() {
 
 }
 
-void ordena () {
-    ntotal = (int*)pBuffer;
-    escolha = (int*)ntotal+ 1;
-    cont = (int*)escolha+ 1;
-    cont2 = (int*)cont + 1;
-    achaNome = (char*)cont2;
-    pessoa = (contato*) (achaNome + 10);
-    for (*cont = 1; *cont < *ntotal; (*cont) = (*cont) + 1){
-            pessoa++;
+void ordenaPonteiros () {
+    pessoasSizeBuffer = (int*)startBuffer;
+    menuBuffer        = (int*)startBuffer  + 1;
+    iBuffer           = (int*)startBuffer  + 2;
+    jBuffer           = (int*)startBuffer  + 3;
+    startStringBuffer = (char*)((int*)startBuffer + 4);
+    endBuffer   = (contato*)(startStringBuffer + 10);
+    for (*iBuffer = 1; *iBuffer < *pessoasSizeBuffer; (*iBuffer) = (*iBuffer) + 1){
+            endBuffer++;
     }
 }
 
 void addContato () {
-    pBuffer = realloc(pBuffer,(4*sizeof(int)) + (10*sizeof(char))+((*ntotal)*sizeof(contato)));
-    ordena ();
+    (*pessoasSizeBuffer)++;
+    startBuffer = realloc(startBuffer,(4*sizeof(int)) + (10*sizeof(char)) + ((*pessoasSizeBuffer)*sizeof(contato)));
+    ordenaPonteiros ();
     printf("\nNome: ");
-    scanf("%s",pessoa->nome);
+    scanf("%s",endBuffer->nome);
     printf("Telefone: ");
-    scanf("%d",&pessoa->numero);
-    //insertSort();
+    scanf("%d",&endBuffer->numero);
 }
 
 void listaContato () {
-    if (*ntotal == 0) {
+    if (*pessoasSizeBuffer == 0) {
         printf("\nAinda nao ha contatos adicionados\n");
     }
     else {
-        pessoa = (char*) achaNome + 10;
-        for(*cont = 0; *cont < *ntotal; (*cont) = (*cont)+1){
-            printf("\nNome: %s",pessoa->nome);
-            printf("\nTelefone: %d\n",pessoa->numero);
-            pessoa = (contato*)pessoa + 1;
+        contato* startPessoasBuffer = (contato*)(startStringBuffer + 10);
+        for(*iBuffer = 0; *iBuffer < *pessoasSizeBuffer; (*iBuffer) = (*iBuffer)+1){
+            printf("\nNome: %s",startPessoasBuffer->nome);
+            printf("\nTelefone: %d\n",startPessoasBuffer->numero);
+            startPessoasBuffer++;
         }
     }
 }
 
 void rmContato () {
-    if (*ntotal == 0) {
+    if (*pessoasSizeBuffer == 0) {
         printf("\nAinda nao ha contatos adicionados\n");
     }
     else {
         printf("\nDigite o nome do contato que desejas remover: ");
-        scanf("%s",achaNome);
-        pessoa = (char*)achaNome + 10;
-        for (*cont = 0; *cont < *ntotal; (*cont) = (*cont)+1){
-            if (strcmp(pessoa->nome,achaNome) == 0) {
-                for (*cont2 = *cont; *cont2 < *ntotal; (*cont2) = (*cont2) + 1) {
-                    aux = pessoa + 1;
-                    pessoa->numero = aux->numero;
-                    strcpy (pessoa->nome,aux->nome);
-                    pessoa = (contato*)pessoa + 1;
+        scanf("%s",startStringBuffer);
+        contato* startPessoasBuffer = (contato*)(startStringBuffer + 10);
+        for (*iBuffer = 0; *iBuffer < *pessoasSizeBuffer; (*iBuffer) = (*iBuffer)+1){
+            if (strcmp(startPessoasBuffer->nome, startStringBuffer) == 0) {
+                for (*jBuffer = *iBuffer; *jBuffer < *pessoasSizeBuffer; (*jBuffer) = (*jBuffer) + 1) {
+                    aux = startPessoasBuffer + 1;
+                    startPessoasBuffer->numero = aux->numero;
+                    strcpy (startPessoasBuffer->nome,aux->nome);
+                    startPessoasBuffer++;
                 }
-                (*ntotal)--;
-                pBuffer  = (void*) realloc (pBuffer,4*sizeof(int)+(10*sizeof(char))+(*ntotal)*sizeof(contato));
-                ordena();
+                (*pessoasSizeBuffer)--;
+                startBuffer  = (void*) realloc (startBuffer,4*sizeof(int)+(10*sizeof(char))+(*pessoasSizeBuffer)*sizeof(contato));
+                ordenaPonteiros();
+                break;
             }
-            pessoa++;
+            startPessoasBuffer++;
         }
     }
 }
 
 void achaContato () {
-    if (*ntotal == 0) {
+    if (*pessoasSizeBuffer == 0) {
         printf("\nAinda nao ha contatos adicionados\n");
     }
     else {
         printf("Qual o nome do contato que desejas achar? ");
-        scanf("%s",achaNome);
-        pessoa = (char*) achaNome + 10;
-        for (*cont = 0; *cont < *ntotal; (*cont) = (*cont)+1){
-            if (strcmp(pessoa->nome,achaNome) == 0) {
-                printf("\nNome     - %s\n",pessoa->nome);
-                printf("Telefone - %d\n",pessoa->numero);
+        scanf("%s",startStringBuffer);
+        endBuffer = (contato*)(startStringBuffer + 10);
+        for (*iBuffer = 0; *iBuffer < *pessoasSizeBuffer; (*iBuffer) = (*iBuffer)+1){
+            if (strcmp(endBuffer->nome,startStringBuffer) == 0) {
+                printf("\nNome     - %s\n",endBuffer->nome);
+                printf("Telefone - %d\n",endBuffer->numero);
             }
-            pessoa = (contato*)pessoa + 1;
+            endBuffer = (contato*)endBuffer + 1;
         }
     }
 }
