@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-//Comentário
-
 typedef struct contato {
     char nome[20];
     int numero;
-}contato;
+} contato;
 
 void menu(void);
 void addContato (void);
@@ -16,19 +14,23 @@ void rmContato(void);
 void achaContato(void);
 void ordenaPonteiros(void); //Ordena os ponteiros depois das funções de add e rm
 
-void insertSort(void);
-void selectionSort(void);
-void quickSort(void);
-//void bubleSort(void);
+void encherLista(void);
+void ordernarContatos(void);
 
+void insertionSort(void);
+void selectionSort(void);
+void quickSort(contato* list, int lo, int hi);
+void bubbleSort(void);
+void swap(contato *a1,contato *a2);
 
 //Primeiro é o 'ntotal' e por ultimo '(acharNome + 10)', ponteiro 'pessoa' sempre aponta para o final do pBuffer
 void *startBuffer;
 int *pessoasSizeBuffer; 
-int *menuBuffer; 
+int *menuBuffer;
 int *iBuffer;
 int *jBuffer;
 contato *endBuffer, *aux;
+contato *startList;
 char *startStringBuffer;
 
 //pBuf
@@ -65,9 +67,12 @@ int main () {
                 achaContato();
                 break;
             case 5:
-                insertSort();
+                ordernarContatos();
                 break;
             case 6:
+                encherLista();
+                break;
+            case 0:
                 printf("\n----- Saindo do programa! -----\n\n");
                 free (startBuffer);
                 return 0;
@@ -76,67 +81,117 @@ int main () {
     } while (1);
 }
 
-void insertSort() {
-	if ((*pessoasSizeBuffer) > 2 ) {
-		contato *temp = malloc(sizeof(contato));
-	    aux = (contato*)(startStringBuffer + 10);
+void ordernarContatos()
+{
+    printf("\n1 - Insert Sort\n");
+    printf("2 - Selection Sort\n");
+    printf("3 - Quick Sort\n");
+    printf("4 - Buble Sort\n");
+    printf("0 - Voltar\n");
+    scanf("%d",menuBuffer);
+    ordenaPonteiros();
+    switch (*menuBuffer) {
+        case 1:
+            insertionSort();
+            break;
+        case 2:
+            selectionSort();
+            break;
+        case 3:
+            quickSort(startList, 0, (*pessoasSizeBuffer) - 1);
+            break;
+        case 4:
+            bubbleSort();
+            break;
+        case 0:
+            break;
+    }
+    ordenaPonteiros();
+}
 
-	    for ((*jBuffer) = 1; (*jBuffer) < (*pessoasSizeBuffer); (*jBuffer)++) {
-			strcpy(temp->nome,aux[(*jBuffer)].nome);
-			temp->numero = aux[(*jBuffer)].numero;
+void insertionSort() {
+	if ((*pessoasSizeBuffer) < 2 ) 
+        return;
 
-			for ((*iBuffer) = (*jBuffer) - 1; (*iBuffer) >= 0 && strcmp(temp->nome,aux[(*iBuffer)].nome) < 0; (*iBuffer)--) {
-				 strcpy(aux[(*iBuffer) + 1].nome,aux[(*iBuffer)].nome);
-				 aux[(*iBuffer) + 1].numero = aux[(*iBuffer)].numero;
-			}
-
-			strcpy(aux[(*iBuffer) + 1].nome,temp->nome);
-			aux[(*iBuffer) + 1].numero = temp->numero;
-		}
-        free(temp);
-        ordenaPonteiros();
-	}
+    contato* list = startList;
+    for ((*iBuffer) = 1; (*iBuffer) < (*pessoasSizeBuffer); (*iBuffer)++) 
+    {
+        for ((*jBuffer) = (*iBuffer) - 1; (*jBuffer) >= 0 && 
+            strcmp(list[(*jBuffer + 1)].nome, list[(*jBuffer)].nome) < 0; 
+            (*jBuffer)--) 
+        {
+                swap(&list[(*jBuffer + 1)], &list[(*jBuffer)]);
+        }
+    }
+    ordenaPonteiros();
 }
 
 void selectionSort () {
-    if ((*pessoasSizeBuffer) > 2) {
-        contato *temp = malloc(sizeof(contato));
-        aux = (contato*)(startStringBuffer + 10);
-        for ((*iBuffer) = 0; (*iBuffer) < (*pessoasSizeBuffer) - 1; (*iBuffer)++) {
-            for ((*jBuffer) = (*pessoasSizeBuffer) - 1; (*jBuffer) > (*iBuffer); (*jBuffer)--) {
-                if (strcmp(aux[(*jBuffer)].nome,aux[(*iBuffer)].nome) < 0) {
+    if ((*pessoasSizeBuffer) < 2)
+        return;
 
-                    temp->numero = aux[(*iBuffer)].numero;
-                    strcpy(temp->nome,aux[(*iBuffer)].nome);
+    contato* list = startList;
 
-                    aux[(*iBuffer)].numero = aux[(*jBuffer)].numero;
-                    strcpy(aux[(*iBuffer)].nome,aux[(*jBuffer)].nome);
-
-                    strcpy(aux[(*jBuffer)].nome,temp->nome);
-                    aux[(*jBuffer)].numero = temp->numero;
-                }
-            }
+    for ((*iBuffer) = 0; (*iBuffer) < (*pessoasSizeBuffer); (*iBuffer)++) {
+        int* current_min = menuBuffer;
+        *current_min = *iBuffer;
+        for ((*jBuffer) = (*pessoasSizeBuffer) - 1; (*jBuffer) > (*iBuffer); (*jBuffer)--) {
+            if (strcmp(list[*jBuffer].nome, list[*current_min].nome) < 0) 
+                *current_min = (*jBuffer);
         }
-        free(temp);
-        ordenaPonteiros();
+        swap(&list[(*iBuffer)], &list[*current_min]);
     }
+    ordenaPonteiros();
 }
 
-void swap(contato **a1,contato **a2, int local) {
+void quickSort(contato* list, int lo, int hi) 
+{
+    if (lo >= hi || lo < 0)
+        return;
+
+    int current_pivo_index = lo;
+
+    for ((*jBuffer) = lo; (*jBuffer) < hi; (*jBuffer)++) {
+        if (strcmp(list[*jBuffer].nome, list[hi].nome) <= 0) {
+            swap(&list[current_pivo_index], &list[*jBuffer]);
+            current_pivo_index++;
+        }
+    }
+
+    swap(&list[current_pivo_index], &list[hi]);
+
+    quickSort(list, lo, current_pivo_index-1);
+    quickSort(list, current_pivo_index+1, hi);
+
+    ordenaPonteiros();
+}
+
+void bubbleSort()
+{
+    // if ((*pessoasSizeBuffer) > 2) {
+    //     aux = (contato*)(startStringBuffer + 10);
+    //     for ((*iBuffer) = 0; (*iBuffer) < (*pessoasSizeBuffer) - 1; (*iBuffer)++) {
+    //         for ((*jBuffer) = 0; (*jBuffer) < (*pessoasSizeBuffer) - 1; (*jBuffer)++) {
+    //             if (strcmp(aux[(*jBuffer)].nome,aux[(*jBuffer) + 1].nome) > 0) {
+    //                 swap(&aux[(*jBuffer)],&aux[(*jBuffer) + 1],(*jBuffer));
+    //             }
+    //         }
+    //     }
+    //     ordenaPonteiros();
+    // }
+}
+
+void swap(contato *a1,contato *a2) {
     contato *temp = malloc(sizeof(contato));
-    temp->numero = aux[(*iBuffer)].numero;
-    strcpy(temp->nome,aux[(*iBuffer)].nome);
 
-    aux[(*iBuffer)].numero = aux[(*jBuffer)].numero;
-    strcpy(aux[(*iBuffer)].nome,aux[(*jBuffer)].nome);
+    temp->numero = a1->numero;
+    strcpy(temp->nome, a1->nome);
 
-    strcpy(aux[(*jBuffer)].nome,temp->nome);
-    aux[(*jBuffer)].numero = temp->numero;
+    a1->numero = a2->numero;
+    strcpy(a1->nome, a2->nome);
 
-}
-
-void quickSort() {
-
+    a2->numero = temp->numero;
+    strcpy(a2->nome, temp->nome);
 }
 
 void ordenaPonteiros () {
@@ -145,7 +200,8 @@ void ordenaPonteiros () {
     iBuffer           = (int*)startBuffer  + 2;
     jBuffer           = (int*)startBuffer  + 3;
     startStringBuffer = (char*)((int*)startBuffer + 4);
-    endBuffer   = (contato*)(startStringBuffer + 10);
+    endBuffer         = (contato*)(startStringBuffer + 10);
+    startList         = (contato*)(startStringBuffer + 10);
     for (*iBuffer = 1; *iBuffer < *pessoasSizeBuffer; (*iBuffer) = (*iBuffer) + 1){
             endBuffer++;
     }
@@ -166,6 +222,7 @@ void listaContato () {
         printf("\nAinda nao ha contatos adicionados\n");
     }
     else {
+        printf("Has %d contacts\n",*pessoasSizeBuffer);
         contato* startPessoasBuffer = (contato*)(startStringBuffer + 10);
         for(*iBuffer = 0; *iBuffer < *pessoasSizeBuffer; (*iBuffer) = (*iBuffer)+1){
             printf("\nNome: %s",startPessoasBuffer->nome);
@@ -219,7 +276,28 @@ void achaContato () {
     }
 }
 
+void encherLista()
+{
+    for (*iBuffer = 0; *iBuffer <= 100; (*iBuffer) = (*iBuffer) + 1) {
+        (*pessoasSizeBuffer)++;
+        startBuffer = realloc(startBuffer,(4*sizeof(int)) + (10*sizeof(char)) + ((*pessoasSizeBuffer)*sizeof(contato)));
+        ordenaPonteiros();
+        endBuffer->nome[0] = (char)(65 + (rand()%25));
+        endBuffer->nome[1] = (char)(65 + (rand()%25));
+        endBuffer->nome[2] = (char)(65 + (rand()%25));
+        endBuffer->nome[3] = (char)(65 + (rand()%25));
+        endBuffer->nome[4] = (char)(65 + (rand()%25));
+        endBuffer->numero = rand();
+    }
+}
 
 void menu (void) {
-    printf("\n\n------- MENU ------\n1 - Adicionar Contato\n2 - Remover Contato\n3 - Listar Contatos\n4 - Achar Contato\n5 - Ordenar Contatos\n6 - Sair do Programa\n");
+    printf("\n------- MENU ------\n");
+    printf("1 - Adicionar Contato\n");
+    printf("2 - Remover Contato\n");
+    printf("3 - Listar Contatos\n");
+    printf("4 - Achar Contato\n");
+    printf("5 - Ordenar Contatos\n");
+    printf("6 - Encher Lista de Contatos\n");
+    printf("0 - Sair do Programa\n");
 }
